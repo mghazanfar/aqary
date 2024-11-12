@@ -2,16 +2,10 @@
 
 import { Box, Card, Paper, Skeleton, Typography } from "@mui/material";
 import { blogsFetcher, useSwrHook } from "@/fetchers";
-import {  blogsPostsDataEndpoint } from "@/constant";
+import { blogsPostsDataEndpoint } from "@/constant";
 import { IBlog, IComment } from "@/interfaces";
 
 export const BlogDetailsComponent = ({ id }: IBlog) => {
-
-  // return null when no id is received else show loading of blog detail and comments seperately
-
-  if (!id) {
-    return null;
-  }
   const { data: blogDetails, isLoading: isLoadingBlogsDetail } = useSwrHook(
     `${blogsPostsDataEndpoint}/${id}`,
     blogsFetcher
@@ -20,6 +14,12 @@ export const BlogDetailsComponent = ({ id }: IBlog) => {
     `${blogsPostsDataEndpoint}/${id}/comments`,
     blogsFetcher
   );
+
+  // return null when no id is received else show loading of blog detail and comments seperately
+
+  if (!id) {
+    return null;
+  }
 
   return (
     <Card sx={{ gap: 1, mt: 2, p: 2, pb: 4 }} variant="outlined">
@@ -58,7 +58,7 @@ export const BlogDetailsComponent = ({ id }: IBlog) => {
           </Box>
         ) : (
           comments?.map((comment: IComment) => (
-            <Paper sx={{ p: 1 }} elevation={9}>
+            <Paper sx={{ p: 1 }} elevation={9} key={comment?.id}>
               <Box display="flex" gap={1}>
                 <Typography fontWeight={800}>Title:</Typography>
                 <Typography>{comment?.name}</Typography>
